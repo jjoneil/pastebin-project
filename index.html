@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script
+  src="https://code.jquery.com/jquery-3.1.1.js"
+  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+  crossorigin="anonymous"></script>
+  
+</head>
+<body>
+	<input type="text" id="input">
+	<input type="text" id="userName">
+	<button id="send">Send</button>
+	<script>
+
+		function getMessages(){
+			$.get("/chat", function(res){
+				// res ---> now array of objects
+				var msgs = JSON.parse(res);
+				$('#output').empty();
+				console.log(res);
+			});
+		};
+
+		function sendMessage(){
+			var text = $('#input').val();
+			var userName = $('#userName').val();
+			//make an object
+			$('#input').val("");
+			 // empty string -> clear input //CHANGE TO EMPTY OBJECT
+			$.post("http://localhost:8080/chat", {
+				message: {
+					text: text,
+					username: userName,
+					time: Date()
+				}
+			}, function(res) {
+				getMessages();
+			});
+		}; //maybe duplicate?????????????
+
+		$('#send').click(sendMessage);
+
+		$('#input').keyup(function(event) {
+			if (event.keyCode === 13) {
+				// 13 is "enter" / "return"
+				sendMessage();
+			}
+		});
+
+		$(document).ready(function(){
+			getMessages();
+
+			//setInterval(getMessages, 1000);
+		});
+
+	</script>
+</body>
+</html>

@@ -41,6 +41,7 @@ app.get("/chat", function(req, res){
 	console.log("hello!")
 	db.collection("chats").find({}).toArray(function(err, data) {
 		res.send(JSON.stringify(data))
+		document.location = "/chat" + res;
 	})
 	
 });
@@ -52,15 +53,16 @@ app.post("/chat", function(req, res){
 			if (err) {
 				console.log(err)
 			} 
-			//console.log(doc.ops[0]._id);
+			res.send(doc.ops[0]._id);
 		});
-		res.send("success");
 	} else{
 		res.send("error");
 	}
 });
 
-app.use(function(req, res, next){
+
+
+app.use(function(err, req, res, next){
 	console.log(err);
 	res.status(404);
 	res.send("404 File Not Found");

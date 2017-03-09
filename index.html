@@ -15,32 +15,20 @@
 	<button id="send">Send</button>
 	<script>
 
-		function getMessages(){
-			$.get("/chat", function(res){
-				// res ---> now array of objects
-				var msgs = JSON.parse(res);
-				$('#output').empty();
-				console.log(res);
-			});
-		};
-
 		function sendMessage(){
 			var text = $('#input').val();
 			var userName = $('#userName').val();
 			//make an object
 			$('#input').val("");
 			 // empty string -> clear input //CHANGE TO EMPTY OBJECT
-			$.post("http://localhost:8080/chat", {
+			$.post("http://localhost:8080/chat" + res, {
 				message: {
 					text: text,
 					username: userName,
 					time: Date()
 				}
-			}, function(res) {
-				getMessages();
 			});
-		}; //maybe duplicate?????????????
-
+		}
 		$('#send').click(sendMessage);
 
 		$('#input').keyup(function(event) {
@@ -49,12 +37,7 @@
 				sendMessage();
 			}
 		});
-
-		$(document).ready(function(){
-			getMessages();
-
-			//setInterval(getMessages, 1000);
-		});
+		//document.location = "/chat" + res;
 
 	</script>
 </body>

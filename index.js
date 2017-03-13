@@ -13,6 +13,7 @@ var express = require("express");
 var app = express();
 
 var MongoClient = require("mongodb").MongoClient;
+var ObjectId = require("mongodb").ObjectId;
 var db;
 MongoClient.connect("mongodb://localhost", function(err, database){
 	if(err){
@@ -37,14 +38,29 @@ app.get("/", function(req, res){
 	res.sendFile(__dirname + "/index.html");
 });
 
-app.get("/chat", function(req, res){
-	console.log("hello!")
-	db.collection("chats").find({}).toArray(function(err, data) {
-		res.send(JSON.stringify(data))
-		document.location = "/chat" + res;
+//SEMI WORKING GET REQ
+// app.get("/chat", function(req, res){
+// 	db.collection("chats").find({}).toArray(function(err, data) {
+// 		res.send(JSON.stringify(data))
+// 		document.location = "/chat" + res;
+// 	})
+// });
+
+
+//final get for message page
+app.get("/chat/:id", function(req, res){
+	var id = req.params.id;
+	console.log({
+		_id: 'ObjectId("' + id + '")'
 	})
-	
+	db.collection("chats").findOne({
+		_id: ObjectId(id)
+	}, function(err, data) {
+		res.send(JSON.stringify(data.text))
+	})
 });
+
+
 
 app.post("/chat", function(req, res){
 	if(req.body.message){
@@ -53,10 +69,12 @@ app.post("/chat", function(req, res){
 			if (err) {
 				console.log(err)
 			} 
-			res.send(doc.ops[0]._id);
+			//console.log(doc.ops[0]._id)
+			res.send(JSON.stringify({message: "success", _id: doc.ops[0]._id}));
+
 		});
 	} else{
-		res.send("error");
+		res.send(JSON.stringify({message: "error"}));
 	}
 });
 

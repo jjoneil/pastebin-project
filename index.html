@@ -21,11 +21,18 @@
 			//make an object
 			$('#input').val("");
 			 // empty string -> clear input //CHANGE TO EMPTY OBJECT
-			$.post("http://localhost:8080/chat" + res, {
+			$.post("http://localhost:8080/chat", {
 				message: {
 					text: text,
 					username: userName,
 					time: Date()
+				}
+			}, function(res){
+				res = JSON.parse(res)
+				if(res.message === "success"){
+					document.location = '/chat/' + res._id
+				} else {
+					console.log(res.message);
 				}
 			});
 		}
